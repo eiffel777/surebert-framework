@@ -103,17 +103,16 @@ class sb_Graph_Point{
 	 * </code>
 	 */
 	public function __construct($width, $height, $values){
-		
-		$this->width = $width;
-		$this->height = $height;
-		
-		$this->graph_width = $width-$this->axis_offset;
-		$this->graph_height = $height-$this->axis_offset;
-		
-		$this->im = imagecreate($this->width, $this->height);
-		$this->allocate_colors();
-		$this->set_values($values);
-		$this->create_background();
+            $this->width = $width;
+            $this->height = $height;
+
+            $this->graph_width = $width-$this->axis_offset;
+            $this->graph_height = $height-$this->axis_offset;
+
+            $this->im = imagecreatetruecolor($this->width, $this->height);
+            $this->allocate_colors();
+            $this->set_values($values);
+            $this->create_background();
 	}
 	
 	/**
@@ -122,10 +121,9 @@ class sb_Graph_Point{
 	 * @param float $increment
 	 */
 	public function set_y_axis_label_increment($increment=''){
-		
-		if(is_numeric($increment)){
-			$this->y_axis_legend_increment = $increment;
-		}
+            if(is_numeric($increment)){
+                $this->y_axis_legend_increment = $increment;
+            }
 	}
 	
 	/**
@@ -136,8 +134,7 @@ class sb_Graph_Point{
 	 * @param integer $b The blue value 0-255
 	 */
 	public function set_point_color($r, $g, $b){
-		
-		$this->ink['point'] = imagecolorallocate($this->im, $r, $g, $b);
+            $this->ink['point'] = imagecolorallocate($this->im, $r, $g, $b);
 	}
 	
 	/**
@@ -148,8 +145,7 @@ class sb_Graph_Point{
 	 * @param integer $b The blue value 0-255
 	 */
 	public function set_line_color($r, $g, $b){
-		
-		$this->ink['line'] = imagecolorallocate($this->im, $r, $g, $b);
+            $this->ink['line'] = imagecolorallocate($this->im, $r, $g, $b);
 	}
 	
 	/**
@@ -160,7 +156,7 @@ class sb_Graph_Point{
 	 * @param integer $b The blue value 0-255
 	 */
 	public function set_text_color($r, $g, $b){
-		$this->ink['text'] = imagecolorallocate($this->im, $r, $g, $b);
+            $this->ink['text'] = imagecolorallocate($this->im, $r, $g, $b);
 	}
 	
 	/**
@@ -171,13 +167,12 @@ class sb_Graph_Point{
 	 * @param integer $b The blue value 0-255
 	 */
 	public function set_axis_color($r, $g, $b){
-		$this->ink['axis'] = imagecolorallocate($this->im, $r, $g, $b);
+            $this->ink['axis'] = imagecolorallocate($this->im, $r, $g, $b);
 	}
 	
-	public function set_background_color($r, $g, $b){
-		
-		$this->ink['background'] = imagecolorallocate($this->im, $r, $g, $b);
-		imagefilledrectangle($this->im, 0, 0, $this->width, $this->height, $this->ink['background']);
+	public function set_background_color($r, $g, $b){	
+            $this->ink['background'] = imagecolorallocate($this->im, $r, $g, $b);
+            imagefilledrectangle($this->im, 0, 0, $this->width, $this->height, $this->ink['background']);
 	}
 	
 	/**
@@ -235,22 +230,21 @@ class sb_Graph_Point{
 		
 		$numbers = Array();
 		foreach($values as $key=>$val){
-			
-			$value = new stdClass();
-			$value->label = trim($key);
-			
-			if(!is_numeric($val)){$val = null;}
-			
-			$value->value = $val;
-			$this->values[] = $value;
-			$numbers[] = $val;
+                    $value = new stdClass();
+                    $value->label = trim($key);
+
+                    if(!is_numeric($val)){$val = null;}
+
+                    $value->value = $val;
+                    $this->values[] = $value;
+                    $numbers[] = $val;
 		
 		}
 		$min_max = Array();
 		foreach($numbers as $number){
-			if(!is_null($number)){
-				array_push($min_max, $number);
-			}
+                    if(!is_null($number)){
+                            asrray_push($min_max, $number);
+                    }
 		}
 		$this->min = min($min_max);
 		$this->max = max($min_max);
@@ -285,24 +279,22 @@ class sb_Graph_Point{
 		$max = round($this->max, $this->precision);
 		
 		if(!isset($this->y_axis_legend_increment)){
-			
-			$increment = round(($max-$min)/$this->total_values, $this->precision);
+                    $increment = round(($max-$min)/$this->total_values, $this->precision);
 		} else {
-			$increment = $this->y_axis_legend_increment;
+                    $increment = $this->y_axis_legend_increment;
 		}
 		
 		if($increment == 0){
-			$increment = 1;
+                    $increment = 1;
 		}
 
 		//$spacing = round($spacing, 10);
 		for($label=$min;$label<=$max+$increment;$label+=$increment){
-		
-			$px_position = $this->plot_value($label);
-			if($this->x_axis_hints ==1 ){
-				imageline($this->im, 0, $px_position, $this->width, $px_position,  $this->ink['axis']);
-			}
-			imagestring($this->im, 1, 10, $px_position-4, $label, $this->ink['text']);
+                    $px_position = $this->plot_value($label);
+                    if($this->x_axis_hints == 1){
+                        imageline($this->im, 30, $px_position, $this->width, $px_position,  $this->ink['axis']);
+                    }
+                    imagestring($this->im, 1, 10, $px_position-4, $label, $this->ink['text']);
 		}
 	}
 	
@@ -322,6 +314,7 @@ class sb_Graph_Point{
 	 *
 	 */
 	private function connect_points(){
+                imagesetthickness($this->im, '2');
 		foreach($this->points as $point){
 			
 			if(is_null($point->value) ){
@@ -345,50 +338,51 @@ class sb_Graph_Point{
 	 * Draw the basic graph and plot the points
 	 *
 	 */
-	public function draw(){
-		
-		//imagerectangle($this->im, $this->axis_offset, $this->graph_height, $this->width, 0, $this->ink['white']);
-		
+	public function draw(){		
 		$this->draw_y_axis();
 		
 		if($this->connect_points ==1){
-			$this->connect_points();	
+                    $this->connect_points();	
 		}
+                
+                
 		
 		foreach($this->points as $point){
-			
-			if($this->y_axis_hints == 1){
-				imagedashedline($this->im, $point->x, $this->height, $point->x, 0, $this->ink['axis'] );
-				
-			} else {
-			
-				//add axis line
-				imageline($this->im, $point->x, $this->graph_height, $point->x, $this->graph_height+10, $this->ink['axis'] );
-			
-			}
-			
-			//add axis label
-			imagestring($this->im, 1, $point->x+5, $this->graph_height+10, $point->label, $this->ink['text']);
-			
-			//don't plot actual point if it is null
-			if(is_null($point->value)){
-				continue;
-			}
-			
-			//plot point
-			imagefilledellipse($this->im, $point->x, $point->y, 7, 7, $this->ink['point']);
-			
-			//add point label
-			if($point->y <= 5){
-				$posy = $point->y+5;
-			} else if($point->y >= $this->graph_height-5){
-				$posy = $point->y-20;
-			} else {
-				$posy = $point->y-15;
-			}
-			
-			imagestring($this->im, 3, $point->x+10, $posy, $point->value, $this->ink['point']);
-			
+                    imagesetthickness($this->im, '1');
+                    imageline($this->im, 30, 0, 30, $this->graph_height-30, $this->ink['axis'] );
+
+                    if($this->y_axis_hints == 1){
+                        imagedashedline($this->im, $point->x, $this->height, $point->x, 0, $this->ink['axis'] );
+
+                    } else {			
+                        //add axis line
+                        imageline($this->im, $point->x+20, $this->graph_height-30, $point->x+20, $this->graph_height-20, $this->ink['axis'] );
+
+                    }
+
+                    //add axis label
+                    imagestring($this->im, 1, $point->x, $this->graph_height-20, $point->label, $this->ink['text']);
+
+                    //don't plot actual point if it is null
+                    if(is_null($point->value)){
+                        continue;
+                    }
+
+                    //plot point
+                    imagefilledellipse($this->im, $point->x, $point->y, 7, 7, $this->ink['point']);
+
+                    //add point label
+                    if($point->y <= 5){
+                        $posy = $point->y+5;
+                    } 
+                    else if($point->y >= $this->graph_height-5){
+                        $posy = $point->y-20;
+                    } 
+                    else {
+                        $posy = $point->y-15;
+                    }
+
+                    imagestring($this->im, 3, $point->x+10, $posy, $point->value, $this->ink['point']);
 		}
 		
 	}
@@ -407,7 +401,7 @@ class sb_Graph_Point{
 		}
 		
 		$y = $this->plot_value($y);
-		imageline($this->im, 0, $y, $this->width, $y, $this->ink[$color]);
+		imageline($this->im, 30, $y, $this->width, $y, $this->ink[$color]);
 		
 		imagestring($this->im, 2, $this->graph_width/2+$this->axis_offset, $y, $label, $this->ink[$color]);
 	}
